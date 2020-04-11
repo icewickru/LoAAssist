@@ -24,7 +24,7 @@ namespace LoAAssist.Helper.GameInfo.Variable
 
         public string getValue()
         {
-            return this.readMemoryHelper.readFloat(ADDRESS).ToString();
+            return Math.Round(this.readMemoryHelper.readFloat(ADDRESS), 2).ToString();
         }
 
         public string getId()

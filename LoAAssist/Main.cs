@@ -59,5 +59,10 @@ namespace LoAAssist
         {
             this.app.appTick(sender, e);
         }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            this.TopMost = ((CheckBox)sender).Checked;
+        }
     }
 }

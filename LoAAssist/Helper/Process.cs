@@ -11,7 +11,7 @@ namespace LoAAssist.Helper
     public class Process
     {
         public const string PROCESS_NAME = "Legends of Aria";
-        public const int OBSERVING_INTERVAL = 2000;
+        public const int OBSERVING_INTERVAL = 500;
 
         [DllImport("USER32.DLL", CharSet = CharSet.Unicode)]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
