@@ -1,0 +1,9 @@
+E:\_Programming\LoAAssist\LoAAssist\LoAAssist\bin\Debug\LoAAssist.exe.config
+E:\_Programming\LoAAssist\LoAAssist\LoAAssist\bin\Debug\LoAAssist.exe
+E:\_Programming\LoAAssist\LoAAssist\LoAAssist\bin\Debug\LoAAssist.pdb
+E:\_Programming\LoAAssist\LoAAssist\LoAAssist\obj\Debug\LoAAssist.csprojResolveAssemblyReference.cache
+E:\_Programming\LoAAssist\LoAAssist\LoAAssist\obj\Debug\LoAAssist.Properties.Resources.resources
+E:\_Programming\LoAAssist\LoAAssist\LoAAssist\obj\Debug\LoAAssist.csproj.GenerateResource.Cache
+E:\_Programming\LoAAssist\LoAAssist\LoAAssist\obj\Debug\LoAAssist.exe
+E:\_Programming\LoAAssist\LoAAssist\LoAAssist\obj\Debug\LoAAssist.pdb
+E:\_Programming\LoAAssist\LoAAssist\LoAAssist\obj\Debug\LoAAssist.Main.resources
