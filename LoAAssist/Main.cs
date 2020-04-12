@@ -12,6 +12,7 @@ using ProcessState = LoAAssist.Helper.ProcessState;
 using ReadMemoryHelper = LoAAssist.Helper.Memory.Read;
 using LoAAssist.Render;
 using LoAAssist.Helper.GameInfo;
+using LoAAssist.DI;
 
 namespace LoAAssist
 {
@@ -21,29 +22,9 @@ namespace LoAAssist
 
         public Main() {
             // Instantiating of classes
-            ProcessState processState = new ProcessState();
-            ProcessHelper processHelper = new ProcessHelper(processState);
-            ReadMemoryHelper readMemoryHelper = new ReadMemoryHelper(
-                processHelper
-            );
-            GameInfo gameInfo = new GameInfo();
-            GameInfoObserver gameInfoObserver = new GameInfoObserver(
-                readMemoryHelper, 
-                gameInfo
-            );
-            Renderer renderer = new Renderer(
-                this,
-                processHelper,
-                gameInfo
-            );
-
-            this.app = new App(
-                this,
-                processHelper,
-                readMemoryHelper,
-                renderer,
-                gameInfoObserver
-            );
+            ObjectManager objectManager = new ObjectManager();
+            objectManager.set(typeof(Main), this);
+            this.app = (App)objectManager.get(typeof(App));
 
             // Runs app
             this.app.run();
