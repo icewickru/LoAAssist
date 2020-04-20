@@ -21,7 +21,7 @@ namespace LoAAssist
         protected App app;
 
         public Main() {
-            // Instantiating of classes
+            // Instantiating of object manager
             ObjectManager objectManager = new ObjectManager();
             objectManager.set(typeof(Main), this);
             this.app = (App)objectManager.get(typeof(App));

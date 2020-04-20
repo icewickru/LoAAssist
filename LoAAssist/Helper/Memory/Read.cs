@@ -21,7 +21,15 @@ namespace LoAAssist.Helper.Memory
                     IntPtr dwProcessId
                     );
 
-        public const int PROCESS_VM_READ = 0x10;
+        protected const int PROCESS_VM_READ = 0x10;
+
+        // Names of observing modules
+        protected static string[] OBSERVE_MODULES = { 
+            "UnityPlayer.dll"
+        };
+
+        // Addresses of observing modules
+        protected Dictionary<string, Int64> moduleAddress = new Dictionary<string, Int64> { };
 
         protected ProcessHelper processHelper;
 
@@ -32,11 +40,26 @@ namespace LoAAssist.Helper.Memory
         }
 
         /// <summary>
+        /// Get address of module of process
+        /// </summary>
+        /// <param name="processName"></param>
+        /// <param name="dllName"></param>
+        /// <returns></returns>
+        public Int64 GetModuleAddress(String processName, String dllName)
+        {
+            System.Diagnostics.Process p = System.Diagnostics.Process.GetProcessesByName(processName).FirstOrDefault();
+            foreach (System.Diagnostics.ProcessModule pm in p.Modules)
+                if (pm.ModuleName.Equals(dllName))
+                    return (Int64)pm.BaseAddress;
+            return 0;
+        }
+
+        /// <summary>
         /// Read 4 bytes of memory by address
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        public byte[] readMemory(Int64 address)
+        public byte[] readMemory(Int64 address, Int32 sizeToRead)
         {
             string processName = ProcessHelper.PROCESS_NAME;
             if (
@@ -47,9 +70,9 @@ namespace LoAAssist.Helper.Memory
             }
 
             int processId = this.processHelper.getProcessState().Instance.Id;
-            IntPtr handle = OpenProcess(PROCESS_VM_READ, IntPtr.Zero, new IntPtr(processId)); // note: use the id
-            byte[] value = new byte[4];
-            var res = ReadProcessMemory(handle, new IntPtr(address), value, sizeof(int), IntPtr.Zero); // 100209928 // 0x209928 // new IntPtr(0x100209930) // new IntPtr(0x100209928)
+            IntPtr handle = OpenProcess(PROCESS_VM_READ, IntPtr.Zero, new IntPtr(processId));
+            byte[] value = new byte[sizeToRead];
+            var res = ReadProcessMemory(handle, new IntPtr(address), value, sizeToRead, IntPtr.Zero);
             if (!res) {
                 return null;
             }
@@ -62,15 +85,110 @@ namespace LoAAssist.Helper.Memory
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        public double readFloat(Int64 address)
+        public float readFloat(Int64 address)
         {
-            byte[] bytes = this.readMemory(address);
+            byte[] bytes = this.readMemory(address, sizeof(float));
             if (bytes == null) {
-                return Double.NaN;
+                return Single.NaN;
             }
             return BitConverter.ToSingle(bytes, 0);
         }
 
+        /// <summary>
+        /// Read and convert memory bytes to double value
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public double readDouble(Int64 address)
+        {
+            byte[] bytes = this.readMemory(address, sizeof(double));
+            if (bytes == null)
+            {
+                return Double.NaN;
+            }
+            return BitConverter.ToDouble(bytes, 0);
+        }
+
+        /// <summary>
+        /// Read and convert memory bytes to Int32 value
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public Int32 readInt32(Int64 address)
+        {
+            byte[] bytes = this.readMemory(address, sizeof(Int32));
+            if (bytes == null)
+            {
+                return 0;
+            }
+            return BitConverter.ToInt32(bytes, 0);
+        }
+
+        /// <summary>
+        /// Read and convert memory bytes to Int64 value
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public Int64 readInt64(Int64 address)
+        {
+            byte[] bytes = this.readMemory(address, sizeof(Int64));
+            if (bytes == null)
+            {
+                return 0;
+            }
+            return BitConverter.ToInt64(bytes, 0);
+        }
+
+        /// <summary>
+        /// Read chain of pointers and return value as array of bytes
+        /// </summary>
+        /// <param name="baseAddress"></param>
+        /// <param name="offsets"></param>
+        /// <param name="valueSize"></param>
+        /// <returns></returns>
+        public byte[] readPointerChain(Int64 baseAddress, Int64[] offsets, Int32 valueSize = 4)
+        {
+            if (offsets.Length == 0) {
+                return this.readMemory(baseAddress, valueSize);
+            }
+
+            Int64 address = baseAddress;
+            for (int i = 0; i < offsets.Length; i++) {
+                address = this.readInt64(address);
+                address += offsets[i];
+            }
+
+            return this.readMemory(address, valueSize);
+        }
+
+        /// <summary>
+        /// Get module address of LoA process
+        /// </summary>
+        /// <param name="moduleName"></param>
+        /// <returns></returns>
+        public Int64 getModuleAddress(string moduleName)
+        {
+            if (
+                this.moduleAddress.ContainsKey(moduleName) &&
+                this.moduleAddress[moduleName] != 0
+            )
+            {
+                return this.moduleAddress[moduleName];
+            }
+
+            foreach (string module in OBSERVE_MODULES)
+            {
+                if (
+                    !this.moduleAddress.ContainsKey(module) ||
+                    this.moduleAddress[module] == 0
+                )
+                {
+                    this.moduleAddress[module] = this.GetModuleAddress(ProcessHelper.PROCESS_NAME, module);
+                }
+            }
+
+            return this.moduleAddress[moduleName];
+        }
     }
 }
 

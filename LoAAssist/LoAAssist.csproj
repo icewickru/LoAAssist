@@ -47,6 +47,7 @@
     <Compile Include="App.cs" />
     <Compile Include="DI\ObjectManager.cs" />
     <Compile Include="DI\PreferencesConfig.cs" />
+    <Compile Include="Helper\GameInfo\Variable\HpPercent.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>

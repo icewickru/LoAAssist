@@ -5,12 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using SysDiag = System.Diagnostics;
+using ReadMemoryHelper = LoAAssist.Helper.Memory.Read;
 
 namespace LoAAssist.Helper
 {
     public class Process
     {
         public const string PROCESS_NAME = "Legends of Aria";
+
         public const int OBSERVING_INTERVAL = 500;
 
         [DllImport("USER32.DLL", CharSet = CharSet.Unicode)]

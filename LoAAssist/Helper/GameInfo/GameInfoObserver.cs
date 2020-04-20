@@ -12,20 +12,31 @@ namespace LoAAssist.Helper.GameInfo
     {
         protected GameInfo gameInfo;
         protected ReadMemoryHelper readMemoryHelper;
+        // Variables
+        protected CoordinateX varCoordinateX;
+        protected CoordinateY varCoordinateY;
+        protected HpPercent varHpPercent;
 
         public GameInfoObserver(
             ReadMemoryHelper _readMemoryHelper,
-            GameInfo _gameInfo
+            GameInfo _gameInfo,
+            CoordinateX _varCoordinateX,
+            CoordinateY _varCoordinateY,
+            HpPercent _varHpPercent
         ) {
             this.readMemoryHelper = _readMemoryHelper;
             this.gameInfo = _gameInfo;
+            this.varCoordinateX = _varCoordinateX;
+            this.varCoordinateY = _varCoordinateY;
+            this.varHpPercent = _varHpPercent;
         }
 
         public List<IVariableInfo> getVariablesInfo()
         {
             return new List<IVariableInfo> {
-                new CoordinateX(this.readMemoryHelper),
-                new CoordinateY(this.readMemoryHelper)
+                this.varCoordinateX,
+                this.varCoordinateY,
+                this.varHpPercent
                 // <HINT> Add here any classes that implements IVariableInfo interface
                 // to search and save values of variables every app tick
             };

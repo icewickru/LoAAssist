@@ -8,7 +8,7 @@ using ReadMemoryHelper = LoAAssist.Helper.Memory.Read;
 
 namespace LoAAssist.Helper.GameInfo.Variable
 {
-    class CoordinateY : IVariableInfo
+    public class CoordinateY : IVariableInfo
     {
         //public const Int64 ADDRESS = 0x100209930;
         public const Int64 ADDRESS = 0x100209940;
